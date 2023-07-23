@@ -1,5 +1,16 @@
 from ab_classes import AddressBook, Name, Phone, Record, Birthday, BirthdayError, PhoneError, Name_Error
+import pickle
+
 address_book = AddressBook()
+
+f_name = 'data.bin'
+
+try:
+    with open(f_name, 'rb') as file:
+        address_book = pickle.load(file)
+except Exception:
+    pass
+
 
 def input_error(func):
     def wrapper(*args):
@@ -11,7 +22,7 @@ def input_error(func):
             return "Name must be not less then 3 symbols"
         except BirthdayError:
             return "Birthday must be in format dd-mm-yyyy"
-        except IndexError:   
+        except IndexError:
             if func.__name__ == 'add_command':
                 return 'Please specify contact name and phone after command'
             elif func.__name__ == 'change_command':
@@ -44,8 +55,9 @@ def add_command(args: tuple[str]) -> str:
     except Exception:
         pass
     rec = Record(name, phone)
-        
+
     return address_book.add_record(rec)
+
 
 @input_error
 def change_command(args: tuple[str]) -> str:
@@ -57,6 +69,7 @@ def change_command(args: tuple[str]) -> str:
         return rec.change_phone(old_p, new_p)
     return f'No contact with name "{name}" in address book'
 
+
 @input_error
 def delete_phone_command(args: tuple[str]) -> str:
     name = Name(args[0])
@@ -66,6 +79,7 @@ def delete_phone_command(args: tuple[str]) -> str:
         return rec.del_phone(phone_to_delete)
     return f'No contact with name "{name}" in address book'
 
+
 @input_error
 def show_command(args: tuple[str]) -> str:
     name = Name(args[0])
@@ -74,6 +88,7 @@ def show_command(args: tuple[str]) -> str:
         return rec
     else:
         return f'No contact with name "{name}" in address book'
+
 
 @input_error
 def show_all_command(*args) -> str:
@@ -86,8 +101,9 @@ def show_all_command(*args) -> str:
             n += 1
         return 'End of records'
     except Exception:
-        pass  
+        pass
     return address_book
+
 
 def no_command():
     return 'Unknown command'
@@ -109,13 +125,15 @@ COMMANDS = {
     hello_command: ('hello', 'привіт'),
     show_command: ('phone', 'show', 'contact', 'телефон', 'контакт'),
     show_all_command: ('show_all', 'all', 'всі', 'книга')
-    }
-        
+}
+
+
 def parser(text: str) -> tuple[callable, list[str]]:
-    command, *data = text.strip().split() 
+    command, *data = text.strip().split()
     for cmd, kwds in COMMANDS.items():
-        if command.lower() in kwds: #спробував відмовитися від .startswith(), оскільки цей метод не достатньо специфічний.
-                                    #як наслідок не спиймаються команди довше ніж 1 слово
+        # спробував відмовитися від .startswith(), оскільки цей метод не достатньо специфічний.
+        if command.lower() in kwds:
+            # як наслідок не спиймаються команди довше ніж 1 слово
             return cmd, data
     return no_command, []
 
@@ -127,7 +145,10 @@ def main():
         command, data = parser(user_input)
         result = command(*data)
         print(result)
+
         if command == exit_command:
+            with open(f_name, 'wb') as file:
+                pickle.dump(address_book, file)
             break
 
 
