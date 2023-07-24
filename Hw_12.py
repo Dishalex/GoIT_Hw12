@@ -109,7 +109,6 @@ def show_all_command(args) -> str:
 @input_error
 def search_command(args: tuple[str]) -> str:
     look_for = args[0]
-    print(look_for)
     return address_book.search(look_for)
 
 
