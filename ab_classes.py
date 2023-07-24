@@ -123,14 +123,17 @@ class AddressBook(UserDict):
             return f"Contact {record.name} {', '.join(str(p) for p in record.phones)} with birthday {record.birthday} was added"
         else:
             return f"Contact {record} was added"
-    
+
     def search(self, key_w):
+        lst = []
         for k, v in self.data.items():
-            print(v, ' '.join(str(r) for r in v.phones))
-            #if (key_w in k) or (key_w in ' '.join(v.phones)):
-#                 print('found')
-#                 print(k, v.phones)
-    
+            search_string = ' '.join(str(r).lower() for r in v.phones)
+            if key_w.lower() in k.lower() or key_w.lower() in search_string:
+                lst.append(k)
+        if lst:
+            return f"For search request {key_w} matches found in contact(s): \n {', '.join(lst)}"
+        return "No mutch found for your request"
+
     def iterator(self, n=3):
         result = []
         count = 0

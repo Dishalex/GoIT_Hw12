@@ -105,13 +105,14 @@ def show_all_command(args) -> str:
         pass
     return address_book
 
+
 @input_error
 def search_command(args: tuple[str]) -> str:
     look_for = args[0]
     print(look_for)
     return address_book.search(look_for)
-        
-        
+
+
 def no_command():
     return 'Unknown command'
 
@@ -132,7 +133,7 @@ COMMANDS = {
     hello_command: ('hello', 'привіт'),
     show_command: ('phone', 'show', 'contact', 'телефон', 'контакт'),
     show_all_command: ('show_all', 'all', 'всі', 'книга'),
-    search_command: ('search', 'find','find', 'знайти', 'пошук', 'шукати', 'lf')
+    search_command: ('search', 'find', 'знайти', 'пошук', 'шукати', 'lf')
 }
 
 
