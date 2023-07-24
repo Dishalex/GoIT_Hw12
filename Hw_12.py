@@ -91,20 +91,27 @@ def show_command(args: tuple[str]) -> str:
 
 
 @input_error
-def show_all_command(*args) -> str:
+def show_all_command(args) -> str:
     try:
         n = 0
-        k = int(args[0])
-        for rec in address_book.iterator(k):
-            print(f'Рage {n}')
-            print(rec)
-            n += 1
-        return 'End of records'
+        k = int(*args[0])
+        if k > 0:
+            for rec in address_book.iterator(k):
+                print(f'Рage {n}')
+                print(rec)
+                n += 1
+            return 'End of records'
     except Exception:
         pass
     return address_book
 
-
+@input_error
+def search_command(args: tuple[str]) -> str:
+    look_for = args[0]
+    print(look_for)
+    return address_book.search(look_for)
+        
+        
 def no_command():
     return 'Unknown command'
 
@@ -124,7 +131,8 @@ COMMANDS = {
     exit_command: ('close', 'exit', 'вийти' 'закрити', 'bye'),
     hello_command: ('hello', 'привіт'),
     show_command: ('phone', 'show', 'contact', 'телефон', 'контакт'),
-    show_all_command: ('show_all', 'all', 'всі', 'книга')
+    show_all_command: ('show_all', 'all', 'всі', 'книга'),
+    search_command: ('search', 'find','find', 'знайти', 'пошук', 'шукати', 'lf')
 }
 
 
